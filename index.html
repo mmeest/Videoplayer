@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Videoplayer</title>
+    <style>
+        body{
+            text-align: center;
+            background-color: rgb(72, 80, 77);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        video{
+            border-radius: 10px;
+        }
+        #full, #blob, #file{
+            visibility: hidden;
+        }
+        button{
+            padding: 6px;
+            font-weight: bold;
+            border-radius: 15px;
+            background-color: rgb(37, 22, 4);
+            color: bisque;
+        }
+    </style>
+</head>
+<body style="margin: auto;">
+    <!-- id="video_player_html5_api" -->    
+    <br>
+    <video 
+    width="640" height="360" controls="controls"></video>
+
+    <p onclick="copyFunction()">
+        video_player_html5_api
+    </p>
+
+    <p id="full">
+        <label>Full video URL:</label>
+        <input type="text" id="fullVideo">
+        <button onclick="full()">GET</button>
+    </p>
+
+    <p>
+        <label>Embedded video URL:</label>
+        <input type="text" id="embeddedVideo">
+        <button onclick="emb()">GET</button>
+    </p>
+
+    <p id="blob">
+        <label>BLOB video URL:</label>
+        <input type="text" id="blobVideo">
+        <button onclick="blob()">GET</button>
+    </p>
+
+    <form id="file">
+        <input type="file" name="file" id="fileItem" onchange="onChange()" >
+        <input type="submit" value="Play">
+    </form>
+
+    <script type="text/javascript">
+    var URL = window.URL || window.webkitURL;
+    var video = document.getElementsByTagName('video')[0];
+
+    function full(){
+        var videoURL = document.getElementById("fullVideo").value;
+        console.log(videoURL);
+        console.log(typeof videoURL);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', videoURL, true);
+        xhr.send();
+        xhr.onload = () => {
+            console.log('hello');
+            console.log(xhr.response);
+        };
+
+
+        video.src = videoURL;
+        video.load();
+        video.onloadeddata = function() {
+            video.play();
+        }
+    }
+
+    function emb(){
+        var videoURL = document.getElementById('embeddedVideo').value;
+        video.src = videoURL;
+        video.load();
+        video.onloadeddata = function() {
+            video.play();
+        }
+    }
+
+    function blob(){
+        var videoURL = document.getElementById('blobVideo').value;
+        video.src = videoURL;
+        video.load();
+        console.log(video.src)
+        video.onloadeddata = function() {
+            video.play();
+        }
+    }
+
+    function onChange() {
+        var fileItem = document.getElementById('fileItem');
+        var files = fileItem.files;
+        var file = files[0];
+        var url = URL.createObjectURL(file);
+        
+        video.src = url;
+        video.load();
+        video.onloadeddata = function() {
+            video.play();
+        }
+    }
+
+    function copyFunction(){
+            var el = document.createElement('textarea');
+            el.value = "video_player_html5_api";
+            el.setAttribute('readonly', '');
+            el.style = {position: 'absolute', left: '-9999px'};
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+        }
+    </script>
+</body>
+</html>
